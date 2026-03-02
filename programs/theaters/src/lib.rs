@@ -1,9 +1,8 @@
 use anchor_lang::prelude::*;
-use std::collections::HashMap;
 
 // This is your program's public key and it will update
 // automatically when you build the project.
-declare_id!("7pT9bkPrxz48GnEqmUKxWCyMAFVtS6ksfMaYRNajs3Wd");
+declare_id!("8rAM6YpZCkiizHAEdWibYwUDyvDEUhh3Kjdft5rz56Ks");
 
 #[program]
 mod theaters {
@@ -15,14 +14,14 @@ mod theaters {
     pub fn add_show(ctx: Context<ModifyTheather>, title: String, date: String) -> Result<()> {
         require!(title.len() <= 50, TheatherError::TitleTooLong);
         require!(date.len() <= 30, TheatherError::DateTooLong);
+        let mut theather = ctx.accounts.theather;
+
         require!(
             theather.upcoming_shows.len() < 90,
             TheatherError::MaxShowsReached
         );
 
         let index: u8;
-
-        let mut theather = ctx.accounts.theather;
 
         if !theather.cleared_index.is_empty() {
             index = theather.cleared_index[0];
@@ -50,7 +49,7 @@ mod theaters {
             .position(|show| show.id == id)
             .ok_or(TheatherError::ShowNotFound)?;
 
-        theather.upcoming_shows.swap_remove(index);
+        theather.upcoming_shows.swap_remove(show_index);
         theather.cleared_index.push(id);
 
         Ok(())
