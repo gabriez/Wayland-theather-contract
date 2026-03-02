@@ -8,13 +8,23 @@ declare_id!("8rAM6YpZCkiizHAEdWibYwUDyvDEUhh3Kjdft5rz56Ks");
 mod theaters {
     use super::*;
     pub fn initialize(ctx: Context<CreateTheather>) -> Result<()> {
+        let owner_id = ctx.accounts.initializer.key(); // caller wallet
+
+        let libros = Vec::<Pubkey>::new(); // crear un vector vacio
+
+        ctx.accounts.theather.set_inner(Theather {
+            owner: owner_id,
+            upcoming_shows: Vec::new(),
+            cleared_index: Vec::new(),
+        });
+
         Ok(())
     }
 
     pub fn add_show(ctx: Context<ModifyTheather>, title: String, date: String) -> Result<()> {
         require!(title.len() <= 50, TheatherError::TitleTooLong);
         require!(date.len() <= 30, TheatherError::DateTooLong);
-        let mut theather = ctx.accounts.theather;
+        let theather = &mut ctx.accounts.theather;
 
         require!(
             theather.upcoming_shows.len() < 90,
@@ -42,7 +52,7 @@ mod theaters {
     }
 
     pub fn delete_show(ctx: Context<ModifyTheather>, id: u8) -> Result<()> {
-        let mut theather = ctx.accounts.theather;
+        let theather = &mut ctx.accounts.theather;
         let show_index = theather
             .upcoming_shows
             .iter()
@@ -61,7 +71,7 @@ mod theaters {
         title: Option<String>,
         date: Option<String>,
     ) -> Result<()> {
-        let mut theather = ctx.accounts.theather;
+        let theather = &mut ctx.accounts.theather;
         let show_index = theather
             .upcoming_shows
             .iter()
@@ -84,20 +94,20 @@ mod theaters {
     }
 
     pub fn print_shows(ctx: Context<ModifyTheather>) -> Result<()> {
-        let mut theather = ctx.accounts.theather;
+        let theather = &ctx.accounts.theather;
         msg!("Upcoming shows: {:?}", theather.upcoming_shows);
         Ok(())
     }
 
     pub fn print_show(ctx: Context<ModifyTheather>, id: u8) -> Result<()> {
-        let mut theather = ctx.accounts.theather;
+        let theather = &ctx.accounts.theather;
         let show_index = theather
             .upcoming_shows
             .iter()
             .position(|show| show.id == id)
             .ok_or(TheatherError::ShowNotFound)?;
 
-        let show = theather.upcoming_shows[show_index];
+        let show = &theather.upcoming_shows[show_index];
 
         msg!(
             "Show id: {}, title: {}, date: {}",
