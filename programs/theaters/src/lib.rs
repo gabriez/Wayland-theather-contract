@@ -112,7 +112,7 @@ mod theaters {
 }
 
 #[error_code]
-pub enum TheathersError {
+pub enum TheatherError {
     #[msg("Title should be less or equal to 50 characters")]
     TitleTooLong,
     #[msg("Date should be less or equal to 30 characters and include hours")]
