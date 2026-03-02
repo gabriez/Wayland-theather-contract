@@ -2,15 +2,13 @@ use anchor_lang::prelude::*;
 
 // This is your program's public key and it will update
 // automatically when you build the project.
-declare_id!("8rAM6YpZCkiizHAEdWibYwUDyvDEUhh3Kjdft5rz56Ks");
+declare_id!("3MCPR7DzXoqK6smx8WR8acej9VtGSBsWcEmGBiRWFH3f");
 
 #[program]
 mod theaters {
     use super::*;
     pub fn initialize(ctx: Context<CreateTheather>) -> Result<()> {
         let owner_id = ctx.accounts.initializer.key(); // caller wallet
-
-        let libros = Vec::<Pubkey>::new(); // crear un vector vacio
 
         ctx.accounts.theather.set_inner(Theather {
             owner: owner_id,
@@ -171,7 +169,7 @@ pub struct CreateTheather<'info> {
         bump
     )]
     pub theather: Account<'info, Theather>,
-    pub system_program: Account<'info, Theather>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
