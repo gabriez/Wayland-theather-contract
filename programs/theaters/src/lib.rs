@@ -48,7 +48,7 @@ mod theaters {
             .upcoming_shows
             .iter()
             .position(|show| show.id == id)
-            .ok_or(TheathersError::ShowNotFound)?;
+            .ok_or(TheatherError::ShowNotFound)?;
 
         theather.upcoming_shows.swap_remove(index);
         theather.cleared_index.push(id);
@@ -67,7 +67,7 @@ mod theaters {
             .upcoming_shows
             .iter()
             .position(|show| show.id == id)
-            .ok_or(TheathersError::ShowNotFound)?;
+            .ok_or(TheatherError::ShowNotFound)?;
 
         let show = &mut theather.upcoming_shows[show_index];
 
@@ -96,7 +96,7 @@ mod theaters {
             .upcoming_shows
             .iter()
             .position(|show| show.id == id)
-            .ok_or(TheathersError::ShowNotFound)?;
+            .ok_or(TheatherError::ShowNotFound)?;
 
         let show = theather.upcoming_shows[show_index];
 
